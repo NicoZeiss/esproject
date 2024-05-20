@@ -1,0 +1,44 @@
+# Fichiers temporaires
+*.pyc
+*~
+\#*\#
+
+# Dossiers spécifiques à Django
+__pycache__
+*.sqlite3
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+*.egg-info
+*.DS_Store
+media/
+static/
+*.log
+
+# Environnement virtuel
+venv/
+.env
+environments/*.env
+
+# Fichiers de configuration locaux
+*.bak
+*.swp
+*~
+
+# Fichiers de dépendances et de construction
+node_modules/
+bower_components/
+.jekyll-cache/
+.jekyll-metadata
+.cache/
+.pytest_cache/
+.coverage
+.coverage.*
+*.egg
+*.egg-info
+dist/
+build/
+docs/_build/
+*.sdist
+*.whl
