@@ -1,1 +1,8 @@
-<h2>Vous etes un docteur</h2>
+<h1>Espace médecin</h1>
+<button hx-get="{% url 'doctor_consultations' %}" hx-target="#doctor-content" hx-swap="innerHTML">Consultations</button>
+<button hx-get="{% url 'doctor_patients' %}" hx-target="#doctor-content" hx-swap="innerHTML">Patients</button>
+
+<div id="doctor-content">
+    {% include 'patients_management/pages/index/contents/doctor_consultations.html' %}
+</div>
+

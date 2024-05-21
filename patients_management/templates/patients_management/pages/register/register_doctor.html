@@ -1,0 +1,12 @@
+{% extends 'patients_management/layouts/main_layout.html' %}
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <a href="{% url 'register_patient' %}">Je suis un patient</a>
+    {% include 'patients_management/components/have_account_button.html' %}
+{% endblock %}

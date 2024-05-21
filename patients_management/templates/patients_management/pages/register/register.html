@@ -1,0 +1,7 @@
+{% extends 'patients_management/layouts/main_layout.html' %}
+{% block content %}
+    <h1>Vous êtes</h1>
+    <a href="{% url 'register_patient' %}">un patient</a>
+    <a href="{% url 'register_doctor' %}">un médecin</a>
+    {% include 'patients_management/components/have_account_button.html' %}
+{% endblock %}

@@ -1,45 +1,80 @@
 import requests
-from django import forms
+
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
-from .models import Patient
+from .forms import PatientForm, DoctorForm
+from .models import Patient, Doctor
+
+
+def unauthenticated_user(view_func):
+    def wrapper_func(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('index')
+        else:
+            return view_func(request, *args, **kwargs)
+    return wrapper_func
 
 
 @login_required(login_url='/login/')
 def index(request):
-    context = {
-        'patients': Patient.objects.all()
-    }
-
-    return render(
-        request,
-        f"patients_management/pages/index/index.html",
-        context
-    )
+    return render(request, f"patients_management/pages/index/index.html")
 
 
+@login_required(login_url='/login/')
 def patient_details(request):
     return render(request, 'patients_management/pages/index/contents/patient_details.html')
 
 
+@login_required(login_url='/login/')
 def patient_consultations(request):
     return render(request, 'patients_management/pages/index/contents/patient_consultations.html')
 
 
-class PatientForm(forms.ModelForm):
-    class Meta:
-        model = Patient
-        fields = ['username', 'password', 'first_name', 'last_name', 'street', 'zip_code', 'city']
-        widgets = {
-            'street': forms.HiddenInput(),
-            'zip_code': forms.HiddenInput(),
-            'city': forms.HiddenInput(),
-        }
+@login_required(login_url='/login/')
+def doctor_patients(request):
+    return render(request, 'patients_management/pages/index/contents/doctor_patients.html')
 
 
+@login_required(login_url='/login/')
+def doctor_consultations(request):
+    return render(request, 'patients_management/pages/index/contents/doctor_consultations.html')
+
+
+@unauthenticated_user
+def register(request):
+    return render(
+        request,
+        'patients_management/pages/register/register.html'
+    )
+
+
+@unauthenticated_user
+def register_doctor(request):
+    if request.method == 'POST':
+        form = DoctorForm(request.POST)
+        if form.is_valid():
+            user = Doctor.objects.create_user(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password'],
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                email=form.cleaned_data.get('email', None),
+            )
+            login(request, user)
+            return redirect('index')
+    else:
+        form = DoctorForm()
+    return render(
+        request,
+        'patients_management/pages/register/register_doctor.html',
+        {'form': form}
+    )
+
+
+@unauthenticated_user
 def register_patient(request):
     if request.method == 'POST':
         form = PatientForm(request.POST)
@@ -60,7 +95,7 @@ def register_patient(request):
         form = PatientForm()
     return render(
         request,
-        'patients_management/pages/patient_form.html',
+        'patients_management/pages/register/register_patient.html',
         {'form': form}
     )
 

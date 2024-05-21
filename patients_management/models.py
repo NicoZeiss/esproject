@@ -72,3 +72,8 @@ class Consultation(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(null=True, blank=True)
     date = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        assert self.patient.role == Patient.base_role, "'patient' should be a PATIENT role"
+        assert self.doctor.role == Doctor.base_role, "'doctor' should be a DOCTOR role"
+        return super().save(*args, **kwargs)

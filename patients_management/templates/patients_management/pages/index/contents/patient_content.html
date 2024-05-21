@@ -1,15 +1,8 @@
 <h1>Espace client</h1>
 
-<h2>Coordonnées</h2>
-<div id="tabs" hx-target="#tab-contents" role="tablist"
-     hx-on:htmx-after-on-load="let currentTab = document.querySelector('[aria-selected=true]');
-                               currentTab.setAttribute('aria-selected', 'false')
-                               currentTab.classList.remove('selected')
-                               let newTab = event.target
-                               newTab.setAttribute('aria-selected', 'true')
-                               newTab.classList.add('selected')">
-    <button role="tab" aria-controls="tab-contents" aria-selected="true" hx-get="/patient/details" class="selected">Tab 1</button>
-    <button role="tab" aria-controls="tab-contents" aria-selected="false" hx-get="/patient/consultations">Tab 2</button>
-</div>
+<button hx-get="{% url 'patient_details' %}" hx-target="#patient-content" hx-swap="innerHTML">Coordonnées</button>
+<button hx-get="{% url 'patient_consultations' %}" hx-target="#patient-content" hx-swap="innerHTML">Consultations</button>
 
-<div id="tab-contents" role="tabpanel" hx-get="/patient/details" hx-trigger="load"></div>
+<div id="patient-content">
+    {% include 'patients_management/pages/index/contents/patient_details.html' %}
+</div>
