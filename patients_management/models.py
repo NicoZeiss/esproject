@@ -58,3 +58,17 @@ class Doctor(UserAccount):
 
     class Meta:
         proxy = True
+
+
+class Consultation(models.Model):
+    class ConsultationType(models.TextChoices):
+        VISIT = "VISIT", "Visite"
+        AFTERCARE = "AFTERCARE", "Suivi"
+        SURGERY = "SURGERY", "Opération"
+
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='patient_consultations')
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='doctor_consultations')
+    consultation_type = models.CharField(max_length=10, choices=ConsultationType.choices)
+    name = models.CharField(max_length=50)
+    description = models.TextField(null=True, blank=True)
+    date = models.DateTimeField()

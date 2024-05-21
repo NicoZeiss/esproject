@@ -31,6 +31,7 @@ class Command(BaseCommand):
                 street=street,
                 zip_code=zip_code,
                 city=city,
+                role='PATIENT'
             )
             patients.append(patient)
 

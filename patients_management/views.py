@@ -10,7 +10,23 @@ from .models import Patient
 
 @login_required(login_url='/login/')
 def index(request):
-    return render(request, f"patients_management/pages/index.html")
+    context = {
+        'patients': Patient.objects.all()
+    }
+
+    return render(
+        request,
+        f"patients_management/pages/index/index.html",
+        context
+    )
+
+
+def patient_details(request):
+    return render(request, 'patients_management/pages/index/contents/patient_details.html')
+
+
+def patient_consultations(request):
+    return render(request, 'patients_management/pages/index/contents/patient_consultations.html')
 
 
 class PatientForm(forms.ModelForm):

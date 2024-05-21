@@ -1,7 +1,8 @@
 {% load static %}
 <header>
-    <h2>Dockteur</h2>
+    <div>Dockteur</div>
     {% if user.is_authenticated %}
+        <h2>Bienvenue {{ user.username }}</h2>
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit">Se déconnecter</button>
