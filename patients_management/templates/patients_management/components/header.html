@@ -1,0 +1,10 @@
+{% load static %}
+<header>
+    <h2>Dockteur</h2>
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Se déconnecter</button>
+        </form>
+    {% endif %}
+</header>
