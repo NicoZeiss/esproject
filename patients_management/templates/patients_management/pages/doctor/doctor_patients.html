@@ -8,16 +8,17 @@
 {% block content %}
     <ul class="py-4 flex flex-col gap-1 items-center">
         {% for patient in page_obj %}
-            <li class="w-3/4 max-w-lg px-4 py-2 flex flex-nowrap justify-between items-center shadow-md rounded-sm">
+            <li class="w-3/4 max-w-4xl px-4 py-2 flex flex-nowrap justify-between items-center shadow-md rounded-sm">
                 <div>
-                    <h3 class="text-cyan-500">{{ patient.first_name | capfirst }} {{ patient.last_name | upper }}</h3>
-                    {%  with item_style='flex flex-nowrap items-center gap-2 text-zinc-500' %}
-                    <p class="{{ item_style }}">
-                        {% heroicon_outline "envelope" size=16 %}<span class="text-sm">{{ patient.email }}</span>
-                    </p>
-                    <p class="{{ item_style }}">
-                        {% heroicon_outline "map-pin" size=16 %}<span class="text-sm text-ellipsis">{{ patient.address }}</span>
-                    </p>
+                    <h3 class="text-cyan-500 font-medium">{{ patient.first_name | capfirst }} {{ patient.last_name | upper }}</h3>
+                    {% with item_style='flex flex-nowrap items-center gap-2 text-zinc-500' %}
+                        <p class="{{ item_style }}">
+                            {% heroicon_outline "envelope" size=16 %}<span class="text-sm">{{ patient.email }}</span>
+                        </p>
+                        <p class="{{ item_style }}">
+                            {% heroicon_outline "map-pin" size=16 %}<span
+                                class="text-sm text-ellipsis">{{ patient.address }}</span>
+                        </p>
                     {% endwith %}
                 </div>
                 <div class="flex flex-nowrap gap-2 justify-center items-center pl-2">
@@ -30,23 +31,34 @@
                 </div>
             </li>
         {% endfor %}
-
-        <div class="pagination">
-            <span class="step-links">
-              {% if page_obj.has_previous %}
-                  <a href="?page=1">&laquo; première</a>
-                  <a href="?page={{ page_obj.previous_page_number }}">précédente</a>
-              {% endif %}
-
-                <span class="current">
-                Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}.
-              </span>
-
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">suivante</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}">dernière &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
     </ul>
+    <div class="w-full flex justify-center">
+        <div class="flex flex-nowrap justify-center items-center">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">{% heroicon_outline "chevron-double-left" size=18 %}</a>
+                <a href="?page={{ page_obj.previous_page_number }}">{% heroicon_outline "chevron-left" size=18 %}</a>
+            {% else %}
+                <p class="text-zinc-400">{% heroicon_outline "chevron-double-left" size=18 %}</p>
+                <p class="text-zinc-400">{% heroicon_outline "chevron-left" size=18 %}</p>
+            {% endif %}
+
+            <span class="px-2">
+                    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                  </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">{% heroicon_outline "chevron-right" size=18 %}</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">{% heroicon_outline "chevron-double-right" size=18 %}</a>
+            {% else %}
+                <p class="text-zinc-400">{% heroicon_outline "chevron-double-right" size=18 %}</p>
+                <p class="text-zinc-400">{% heroicon_outline "chevron-right" size=18 %}</p>
+            {% endif %}
+        </div>
+    </div>
+        <button class="fixed bottom-10 right-10 bg-cyan-500 rounded-full border-2 border-cyan-500 p-3.5 text-white
+         shadow-xl hover:bg-white hover:text-cyan-500 active:bg-cyan-500 active:text-white duration-300">
+        {% heroicon_outline "plus" %}
+        </button>
+    </div>
+
 {% endblock %}

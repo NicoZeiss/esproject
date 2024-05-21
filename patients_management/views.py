@@ -1,5 +1,8 @@
 import requests
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
+from django import forms
 
 from django.http import JsonResponse
 from django.urls import resolve
@@ -17,6 +20,7 @@ def unauthenticated_user(view_func):
             return redirect('index')
         else:
             return view_func(request, *args, **kwargs)
+
     return wrapper_func
 
 
@@ -27,6 +31,29 @@ def index(request):
         elif request.user.role == UserAccount.Role.DOCTOR:
             return redirect('patient_consultations')
     return redirect('login')
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+    input_classes = 'w-full py-2 px-4'
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': input_classes,
+            'placeholder': 'Nom d\'utilisateur',
+        }
+    ))
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                'class': input_classes,
+                'placeholder': 'Mot de passe',
+            }
+        )
+    )
+
+
+class CustomLoginView(LoginView):
+    authentication_form = CustomAuthenticationForm
+    template_name = 'patients_management/pages/login.html'
 
 
 @login_required(login_url='/login/')
@@ -53,7 +80,7 @@ def doctor_consultations(request):
 def doctor_list_patients(request):
     current_view = resolve(request.path_info).url_name
     patients = Patient.objects.all().order_by('username')
-    paginator = Paginator(patients, 6)
+    paginator = Paginator(patients, 20)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

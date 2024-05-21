@@ -10,7 +10,8 @@
 </head>
 <body>
 {% include 'patients_management/components/header.html' %}
-<main class="w-full min-h-screen pt-24 overflow-x-hidden flex-col items-center">
+<main class="relative w-full min-h-screen pt-24 pb-12 overflow-x-hidden flex-col items-center bg-cover bg-center bg-fixed"
+      style="background-image: url({% static 'patients_management/img/background.jpg' %})">
     {% block page_title %}{% endblock %}
     {% block content %}{% endblock %}
 </main>

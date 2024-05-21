@@ -1,7 +1,7 @@
 {% load static %}
 {% load heroicons %}
 <header class="fixed h-24 px-4 py-2.5 w-full overflow-x-hidden bg-white/10 backdrop-blur
-flex justify-center items-center overflow-hidden">
+flex justify-center items-center overflow-hidden z-50">
     <div class="absolute left-4">
         <p class="text-3xl font-bold text-cyan-500">Docto<span class="text-zinc-500">Bill</span></p>
     </div>
@@ -19,11 +19,13 @@ flex justify-center items-center overflow-hidden">
                     {% if user.role == user.Role.DOCTOR %}
                         <a href="{% url 'doctor_consultations' %}"
                            class="{{ button_style }}
+
                                    {% if current_view == 'doctor_consultations' %}{{ selected }}{% else %}{{ not_selected }}{% endif %}">
                             Consultations
                         </a>
                         <a href="{% url 'doctor_list_patients' %}"
                            class="{{ button_style }}
+
                                    {% if current_view == 'doctor_list_patients' %}{{ selected }}{% else %}{{ not_selected }}{% endif %}">Patients</a>
                     {% endif %}
                 {% endwith %}
@@ -37,7 +39,9 @@ flex justify-center items-center overflow-hidden">
             </button>
         </form>
     {% else %}
-        <h2>Bienvenue sur DoctoBill !</h2>
-        <div/>
+        <h2 class="text-center text-xl">Bienvenue sur DoctoBill !</h2>
+        <a href="{% url 'login' %}" class="absolute right-4">
+            {% heroicon_outline "arrow-right-end-on-rectangle" size=20 %}
+        </a>
     {% endif %}
 </header>

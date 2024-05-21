@@ -1,11 +1,15 @@
 from django.urls import path
+from django.contrib.auth import views as auth_views
 
 from patients_management.views import register, register_patient, register_doctor, address_autocomplete, index, \
-    patient_details, patient_consultations, doctor_list_patients, doctor_consultations
+    patient_details, patient_consultations, doctor_list_patients, doctor_consultations, CustomLoginView
 
 
 urlpatterns = [
     path('', index, name='index'),
+
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', register, name='register'),
     path('register-doctor/', register_doctor, name='register_doctor'),
     path('register-patient/', register_patient, name='register_patient'),
