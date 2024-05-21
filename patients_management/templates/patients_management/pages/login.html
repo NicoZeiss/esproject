@@ -1,23 +1,20 @@
-{% extends 'patients_management/layouts/main_layout.html' %}
+{% extends 'patients_management/layouts/glassmorphic_card.html' %}
 
-{% block content %}
-    <section class="w-full h-full">
-        <div class="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-1/3 mt-20 w-11/12 max-w-xl p-10 rounded-xl
-        flex flex-col items-stretch gap-4 backdrop-blur-md bg-white/20">
-            <h2 class="text-xl text-cyan-500 text-center pb-3 border-b-2">
-                Connectez-vous à votre espace personnel !
-            </h2>
-            <form method="post" class="w-full flex flex-col items-stretch gap-4">
-                {% csrf_token %}
-                {{ form.username }}
-                {{ form.password }}
-                <button type="submit" class="text-center bg-cyan-500 py-2 uppercase text-white font-medium
+{% block card_title %}
+    <h2 class="text-xl text-cyan-500 text-center font-medium pb-3 border-b-2 uppercase">
+        Connectez-vous à votre espace personnel !
+    </h2>
+{% endblock %}
+
+{% block card_content %}
+    <form method="post" class="w-full flex flex-col items-stretch gap-4">
+        {% csrf_token %}
+        {{ form.username }}
+        {{ form.password }}
+        <button type="submit" class="text-center bg-cyan-500 py-2 uppercase text-white font-medium
             rounded-md hover:bg-cyan-400 active:bg-cyan-500 duration-200">
-                    Se connecter
-                </button>
-            </form>
-            <a href="{% url 'register' %}">Pas encore de compte ?</a>
-        </div>
-
-    </section>
+            Se connecter
+        </button>
+    </form>
+    <a class="text-end text-white underline underline-offset-2" href="{% url 'register' %}">Pas encore de compte ?</a>
 {% endblock %}

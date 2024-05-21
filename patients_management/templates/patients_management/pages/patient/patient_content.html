@@ -1,8 +1,0 @@
-<h1>Espace client</h1>
-
-<button hx-get="{% url 'patient_details' %}" hx-target="#patient-content" hx-swap="innerHTML">Coordonnées</button>
-<button hx-get="{% url 'patient_consultations' %}" hx-target="#patient-content" hx-swap="innerHTML">Consultations</button>
-
-<div id="patient-content">
-    {% include 'patients_management/pages/patient/patient_details.html' %}
-</div>

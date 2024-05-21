@@ -1,12 +1,23 @@
-{% extends 'patients_management/layouts/main_layout.html' %}
+{% extends 'patients_management/layouts/glassmorphic_card.html' %}
 
-{% block content %}
-    <form method="POST">
+{% block card_title %}
+    <h2 class="text-xl text-cyan-500 text-center font-medium pb-3 border-b-2 uppercase">
+        Inscrivez-vous comme médecin
+    </h2>
+{% endblock %}
+
+{% block card_content %}
+    <form method="POST" class="w-full flex flex-col items-stretch gap-4">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
+        {{ form.username }}
+        {{ form.password }}
+        {{ form.first_name }}
+        {{ form.last_name }}
+        {{ form.email }}
+        <button type="submit" class="text-center bg-cyan-500 py-2 uppercase text-white font-medium
+            rounded-md hover:bg-cyan-400 active:bg-cyan-500 duration-200">
+            S'inscrire
+        </button>
     </form>
-
-    <a href="{% url 'register_patient' %}">Je suis un patient</a>
     {% include 'patients_management/components/have_account_button.html' %}
 {% endblock %}

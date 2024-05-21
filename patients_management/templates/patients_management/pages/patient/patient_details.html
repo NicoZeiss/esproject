@@ -1,7 +1,31 @@
-<div>
-	<p>Prénom : {{ user.first_name }}</p>
-    <p>Nom : {{ user.last_name }}</p>
-    <p>username : {{ user.username }}</p>
-    <p>email : {{ user.email }}</p>
-    <p>Adresse : {{ user.street }}, {{ user.zip_code }} {{ user.city | upper }}</p>
-</div>
+{% extends 'patients_management/layouts/glassmorphic_card.html' %}
+{% load heroicons %}
+
+{% block card_title %}
+    <h2 class="text-xl text-cyan-500 text-center font-medium pb-3 border-b-2 uppercase">
+        Mes in formations personnelles
+    </h2>
+{% endblock %}
+
+{% block card_content %}
+    {% with item_style='flex items-center gap-4' %}
+    {% if user.last_name and user.first_name %}
+        <p class="{{ item_style }}">
+            {% heroicon_outline "user" size=18 %}<span>{{ user.first_name | capfirst }} {{ user.last_name | upper }}</span>
+        </p>
+        {% else %}
+        <p class="{{ item_style }}">
+            {% heroicon_outline "user" size=18 %}<span>Non renseigné</span>
+        </p>
+    {% endif %}
+    <p class="{{ item_style }}">
+        {% heroicon_outline "tag" size=18 %}<span>{{ user.username }}</span>
+    </p>
+    <p class="{{ item_style }}">
+        {% heroicon_outline "envelope" size=18 %}<span>{{ user.email|default:'Non renseigné' }}</span>
+    </p>
+    <p class="{{ item_style }}">
+        {% heroicon_outline "map-pin" size=18 %}<span>{{ user.street }}, {{ user.zip_code }} {{ user.city | upper }}</span>
+    </p>
+    {% endwith %}
+{% endblock %}

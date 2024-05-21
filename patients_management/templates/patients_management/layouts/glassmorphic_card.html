@@ -1,0 +1,11 @@
+{% extends 'patients_management/layouts/main_layout.html' %}
+
+{% block content %}
+    <section class="w-full h-full">
+        <div class="absolute -translate-x-2/4 -translate-y-2/4 left-2/4 top-1/3 mt-20 w-11/12 max-w-xl p-10 rounded-xl
+        flex flex-col items-stretch gap-4 backdrop-blur-2xl bg-white/10 shadow-2xl">
+            {% block card_title %}{% endblock %}
+            {% block card_content %}{% endblock %}
+        </div>
+    </section>
+{% endblock %}
