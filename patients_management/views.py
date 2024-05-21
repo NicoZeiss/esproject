@@ -1,12 +1,14 @@
 import requests
+from django.core.paginator import Paginator
 
 from django.http import JsonResponse
+from django.urls import resolve
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
 from .forms import PatientForm, DoctorForm
-from .models import Patient, Doctor
+from .models import UserAccount, Patient, Doctor
 
 
 def unauthenticated_user(view_func):
@@ -18,29 +20,48 @@ def unauthenticated_user(view_func):
     return wrapper_func
 
 
-@login_required(login_url='/login/')
 def index(request):
-    return render(request, f"patients_management/pages/index/index.html")
+    if request.user.is_authenticated:
+        if request.user.role == UserAccount.Role.DOCTOR:
+            return redirect('doctor_consultations')
+        elif request.user.role == UserAccount.Role.DOCTOR:
+            return redirect('patient_consultations')
+    return redirect('login')
 
 
 @login_required(login_url='/login/')
 def patient_details(request):
-    return render(request, 'patients_management/pages/index/contents/patient_details.html')
+    return render(request, 'patients_management/pages/patient/patient_details.html')
 
 
 @login_required(login_url='/login/')
 def patient_consultations(request):
-    return render(request, 'patients_management/pages/index/contents/patient_consultations.html')
-
-
-@login_required(login_url='/login/')
-def doctor_patients(request):
-    return render(request, 'patients_management/pages/index/contents/doctor_patients.html')
+    return render(request, 'patients_management/pages/patient/patient_consultations.html')
 
 
 @login_required(login_url='/login/')
 def doctor_consultations(request):
-    return render(request, 'patients_management/pages/index/contents/doctor_consultations.html')
+    current_view = resolve(request.path_info).url_name
+    return render(
+        request,
+        'patients_management/pages/doctor/doctor_consultations.html',
+        {'current_view': current_view}
+    )
+
+
+@login_required(login_url='/login/')
+def doctor_list_patients(request):
+    current_view = resolve(request.path_info).url_name
+    patients = Patient.objects.all().order_by('username')
+    paginator = Paginator(patients, 6)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(
+        request,
+        'patients_management/pages/doctor/doctor_patients.html',
+        {'page_obj': page_obj, 'current_view': current_view}
+    )
 
 
 @unauthenticated_user

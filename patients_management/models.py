@@ -19,6 +19,10 @@ class UserAccount(AbstractUser):
         self.role = self.base_role
         return super().save(*args, **kwargs)
 
+    @property
+    def address(self):
+        return f"{self.street}, {self.zip_code} {self.city.upper()}"
+
 
 class PatientManager(UserManager):
     def get_queryset(self, *args, **kwargs):

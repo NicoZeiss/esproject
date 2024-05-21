@@ -1,7 +1,7 @@
 from django.urls import path
 
 from patients_management.views import register, register_patient, register_doctor, address_autocomplete, index, \
-    patient_details, patient_consultations, doctor_patients, doctor_consultations
+    patient_details, patient_consultations, doctor_list_patients, doctor_consultations
 
 
 urlpatterns = [
@@ -14,6 +14,6 @@ urlpatterns = [
     path('patient/details/', patient_details, name='patient_details'),
     path('patient/consultations/', patient_consultations, name='patient_consultations'),
 
-    path('doctor/patients/', doctor_patients, name='doctor_patients'),
+    path('doctor/patients/', doctor_list_patients, name='doctor_list_patients'),
     path('doctor/consultations/', doctor_consultations, name='doctor_consultations'),
 ]

@@ -1,11 +1,43 @@
 {% load static %}
-<header>
-    <div>Dockteur</div>
+{% load heroicons %}
+<header class="fixed h-24 px-4 py-2.5 w-full overflow-x-hidden bg-white/10 backdrop-blur
+flex justify-center items-center overflow-hidden">
+    <div class="absolute left-4">
+        <p class="text-3xl font-bold text-cyan-500">Docto<span class="text-zinc-500">Bill</span></p>
+    </div>
     {% if user.is_authenticated %}
-        <h2>Bienvenue {{ user.username }}</h2>
-        <form method="post" action="{% url 'logout' %}">
+        <div class="flex flex-col items-center gap-1">
+            <h2 class="text-center text-xl">
+                {% if user.first_name and user.last_name %}
+                    Bienvenue {{ user.first_name | capfirst }} {{ user.last_name | capfirst }}
+                {% else %}
+                    Bienvenue {{ user.username | capfirst }}
+                {% endif %}
+            </h2>
+            <div class="flex gap-2">
+                {% with button_style='text-sm px-1 py-1 border-b-2 hover:border-cyan-400 duration-300' not_selected='border-zinc-300' selected='border-cyan-500' %}
+                    {% if user.role == user.Role.DOCTOR %}
+                        <a href="{% url 'doctor_consultations' %}"
+                           class="{{ button_style }}
+                                   {% if current_view == 'doctor_consultations' %}{{ selected }}{% else %}{{ not_selected }}{% endif %}">
+                            Consultations
+                        </a>
+                        <a href="{% url 'doctor_list_patients' %}"
+                           class="{{ button_style }}
+                                   {% if current_view == 'doctor_list_patients' %}{{ selected }}{% else %}{{ not_selected }}{% endif %}">Patients</a>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+
+        <form method="post" action="{% url 'logout' %}" class="absolute right-4">
             {% csrf_token %}
-            <button type="submit">Se déconnecter</button>
+            <button type="submit">
+                {% heroicon_outline "arrow-right-start-on-rectangle" size=20 %}
+            </button>
         </form>
+    {% else %}
+        <h2>Bienvenue sur DoctoBill !</h2>
+        <div/>
     {% endif %}
 </header>
