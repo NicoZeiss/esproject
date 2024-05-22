@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.utils import timezone
 
 
 class UserAccount(AbstractUser):
@@ -23,7 +24,9 @@ class UserAccount(AbstractUser):
 
     @property
     def address(self):
-        return f"{self.street}, {self.zip_code} {self.city.upper()}"
+        if self.street and self.zip_code and self.city:
+            return f"{self.street}, {self.zip_code} {self.city.upper()}"
+        return None
 
 
 class PatientManager(UserManager):
@@ -44,6 +47,11 @@ class Patient(UserAccount):
         self.is_superuser = False
         self.is_staff = False
         return super().save(*args, **kwargs)
+
+    def __str__(self):
+        if self.last_name and self.first_name:
+            return f"{self.last_name.upper()} {self.first_name.capitalize()}"
+        return self.username.capitalize()
 
 
 class DoctorManager(UserManager):
@@ -74,7 +82,11 @@ class Consultation(models.Model):
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='patient_consultations')
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='doctor_consultations')
-    consultation_type = models.CharField(max_length=10, choices=ConsultationType.choices)
+    consultation_type = models.CharField(
+        max_length=10,
+        choices=ConsultationType.choices,
+        default=ConsultationType.VISIT
+    )
     name = models.CharField(max_length=50)
     description = models.TextField(null=True, blank=True)
     date = models.DateTimeField()
@@ -83,3 +95,13 @@ class Consultation(models.Model):
         assert self.patient.role == Patient.base_role, "'patient' should be a PATIENT role"
         assert self.doctor.role == Doctor.base_role, "'doctor' should be a DOCTOR role"
         return super().save(*args, **kwargs)
+
+    @property
+    def verbose_type(self):
+        for choice in self.ConsultationType.choices:
+            if choice[0] == self.consultation_type:
+                return choice[1]
+
+    @property
+    def is_outdated(self):
+        return self.date < timezone.now()

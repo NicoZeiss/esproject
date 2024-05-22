@@ -1,0 +1,19 @@
+{% load heroicons %}
+{% with item_style='flex flex-nowrap items-center gap-2 text-zinc-500' %}
+    <p class="{{ item_style }}">
+        <span class="{% if is_outdated %}text-rose-800{% else %}text-green-700{% endif %}">
+            {% heroicon_outline "calendar-days" size=14 %}
+        </span>
+        <span class="text-xs {% if is_outdated %}text-rose-800{% else %}text-green-700{% endif %}">
+            {{ date|date:"d/m/Y" }}
+        </span>
+    </p>
+    <p class="{{ item_style }}">
+        <span class="{% if is_outdated %}text-rose-800{% else %}text-green-700{% endif %}">
+            {% heroicon_outline "clock" size=14 %}
+        </span>
+        <span class="text-xs {% if is_outdated %}text-rose-800{% else %}text-green-700{% endif %}">
+            {{ date|date:"H:i" }}
+        </span>
+    </p>
+{% endwith %}

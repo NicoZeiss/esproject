@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 
 from patients_management.views import register, register_patient, register_doctor, address_autocomplete, index, \
     patient_details, patient_consultations, doctor_list_patients, doctor_consultations, CustomLoginView, \
-    delete_patient, modify_patient
+    delete_patient, modify_patient, create_consultation, delete_consultation
 
 
 urlpatterns = [
@@ -19,9 +19,11 @@ urlpatterns = [
     path('patient/details/', patient_details, name='patient_details'),
     path('patient/consultations/', patient_consultations, name='patient_consultations'),
     path('patients/modify/<int:patient_id>/', modify_patient, name='modify_patient'),
+    path('delete-patient/<int:patient_id>/', delete_patient, name='delete_patient'),
 
     path('doctor/patients/', doctor_list_patients, name='doctor_list_patients'),
     path('doctor/consultations/', doctor_consultations, name='doctor_consultations'),
+    path('doctor/create-consultation/', create_consultation, name='create_consultation'),
+    path('delete-consultation/<int:consultation_id>/', delete_consultation, name='delete_consultation'),
 
-    path('delete-patient/<int:patient_id>/', delete_patient, name='delete_patient'),
 ]

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import Patient, Doctor
+from .models import Patient, Doctor, Consultation
 
 
 class PatientForm(forms.ModelForm):
@@ -67,3 +67,19 @@ class CustomAuthenticationForm(AuthenticationForm):
             }
         )
     )
+
+
+class ConsultationForm(forms.ModelForm):
+    class Meta:
+        input_classes = 'w-full py-2 px-4'
+        model = Consultation
+        fields = ['patient', 'description', 'date', 'consultation_type']
+        widgets = {
+            'date': forms.DateTimeInput(attrs={'class': input_classes, 'type': 'datetime-local'}),
+            'description': forms.Textarea(attrs={'class': input_classes, 'placeholder': 'Description'}),
+            'consultation_type': forms.Select(attrs={'class': input_classes, 'placeholder': 'Type'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['patient'].queryset = Patient.objects.order_by('last_name', 'first_name')

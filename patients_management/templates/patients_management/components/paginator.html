@@ -1,0 +1,24 @@
+{% load heroicons %}
+<div class="w-full flex justify-center">
+    <div class="flex flex-nowrap justify-center items-center">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">{% heroicon_outline "chevron-double-left" size=18 %}</a>
+            <a href="?page={{ page_obj.previous_page_number }}">{% heroicon_outline "chevron-left" size=18 %}</a>
+        {% else %}
+            <p class="text-zinc-400">{% heroicon_outline "chevron-double-left" size=18 %}</p>
+            <p class="text-zinc-400">{% heroicon_outline "chevron-left" size=18 %}</p>
+        {% endif %}
+
+        <span class="px-2">
+                        {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                      </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">{% heroicon_outline "chevron-right" size=18 %}</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">{% heroicon_outline "chevron-double-right" size=18 %}</a>
+        {% else %}
+            <p class="text-zinc-400">{% heroicon_outline "chevron-double-right" size=18 %}</p>
+            <p class="text-zinc-400">{% heroicon_outline "chevron-right" size=18 %}</p>
+        {% endif %}
+    </div>
+</div>

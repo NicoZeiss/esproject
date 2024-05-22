@@ -6,24 +6,26 @@
 {% endblock %}
 
 {% block content %}
-    <ul class="py-4 flex flex-col gap-1 items-center">
+    <ul class="grow self-stretch py-12 flex flex-col gap-1 items-center">
         {% for patient in page_obj %}
             <li class="w-3/4 max-w-4xl px-4 py-2 flex flex-nowrap justify-between items-center shadow-md rounded-sm
-                backdrop-blur-2xl bg-white/70">
+                backdrop-blur-2xl bg-white/70 border border-white/20">
                 <div>
                     <h3 class="text-cyan-500 font-medium">{{ patient.last_name | upper }} {{ patient.first_name | capfirst }}</h3>
                     {% with item_style='flex flex-nowrap items-center gap-2 text-zinc-500' %}
                         <p class="{{ item_style }}">
-                            {% heroicon_outline "envelope" size=16 %}<span class="text-sm">{{ patient.email }}</span>
+                            {% heroicon_outline "envelope" size=16 %}<span
+                                class="text-sm">{{ patient.email|default:'Non renseigné' }}</span>
                         </p>
                         <p class="{{ item_style }}">
                             {% heroicon_outline "map-pin" size=16 %}<span
-                                class="text-sm text-ellipsis">{{ patient.address }}</span>
+                                class="text-sm text-ellipsis">{{ patient.address|default:'Non renseigné' }}</span>
                         </p>
                     {% endwith %}
                 </div>
                 <div class="flex flex-nowrap gap-2 justify-center items-center pl-2">
-                    <a href="{% url 'modify_patient' patient.id %}" class="text-zinc-500 hover:text-cyan-400 duration-300">
+                    <a href="{% url 'modify_patient' patient.id %}"
+                       class="text-zinc-500 hover:text-cyan-400 duration-300">
                         {% heroicon_outline "pencil" size=18 %}
                     </a>
                     <form id="deleteForm-{{ patient.id }}" method="POST" action="{% url 'delete_patient' patient.id %}">
@@ -35,7 +37,6 @@
                             {% heroicon_outline "trash" size=18 %}
                         </button>
                     </form>
-
                 </div>
             </li>
 
@@ -62,34 +63,13 @@
                 </div>
             </div>
         {% endfor %}
+        {% include 'patients_management/components/paginator.html' with page_obj=page_obj %}
     </ul>
-    <div class="w-full flex justify-center">
-        <div class="flex flex-nowrap justify-center items-center">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">{% heroicon_outline "chevron-double-left" size=18 %}</a>
-                <a href="?page={{ page_obj.previous_page_number }}">{% heroicon_outline "chevron-left" size=18 %}</a>
-            {% else %}
-                <p class="text-zinc-400">{% heroicon_outline "chevron-double-left" size=18 %}</p>
-                <p class="text-zinc-400">{% heroicon_outline "chevron-left" size=18 %}</p>
-            {% endif %}
 
-            <span class="px-2">
-                        {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
-                      </span>
-
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">{% heroicon_outline "chevron-right" size=18 %}</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">{% heroicon_outline "chevron-double-right" size=18 %}</a>
-            {% else %}
-                <p class="text-zinc-400">{% heroicon_outline "chevron-double-right" size=18 %}</p>
-                <p class="text-zinc-400">{% heroicon_outline "chevron-right" size=18 %}</p>
-            {% endif %}
-        </div>
-    </div>
-    <button class="fixed bottom-10 right-10 bg-cyan-500 rounded-full border-2 border-cyan-500 p-3.5 text-white
+    <a href="{% url 'register_patient' %}" class="fixed bottom-10 right-10 bg-cyan-500 rounded-full border-2 border-cyan-500 p-3.5 text-white
              shadow-xl hover:bg-transparent hover:text-cyan-500 active:bg-cyan-500 active:text-white duration-300">
         {% heroicon_outline "plus" %}
-    </button>
+    </a>
 
 
     <script>

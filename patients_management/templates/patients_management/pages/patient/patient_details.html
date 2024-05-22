@@ -19,7 +19,7 @@
         {% heroicon_outline "envelope" size=18 %}<span>{{ user.email|default:'Non renseigné' }}</span>
     </p>
     <p class="{{ item_style }}">
-        {% heroicon_outline "map-pin" size=18 %}<span>{{ user.street }}, {{ user.zip_code }} {{ user.city | upper }}</span>
+        {% heroicon_outline "map-pin" size=18 %}<span>{{ user.address|default:'Non renseigné' }}</span>
     </p>
     {% endwith %}
 {% endblock %}

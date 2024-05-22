@@ -2,7 +2,11 @@
 
 {% block card_title %}
     <h2 class="text-xl text-teal-500 text-center font-medium pb-3 border-b-2 uppercase">
-        Inscrivez-vous comme patient
+        {% if from_doctor %}
+            Créer un patient
+        {% else %}
+            Inscrivez-vous comme patient
+        {% endif %}
     </h2>
 {% endblock %}
 
@@ -20,10 +24,18 @@
         <select name="address-autocomplete" id="address-autocomplete" class="w-full"></select>
         <button type="submit" class="text-center bg-teal-500 py-2 uppercase text-white font-medium
             rounded-md hover:bg-teal-400 active:bg-teal-500 duration-200">
-            S'inscrire
+            {% if from_doctor %}
+                Enregistrer
+            {% else %}
+                S'inscrire
+            {% endif %}
         </button>
     </form>
-    {% include 'patients_management/components/have_account_button.html' %}
+    {% if from_doctor %}
+        {% include 'patients_management/components/return_button.html' with return_url='/doctor/patients/' %}
+    {% else %}
+        {% include 'patients_management/components/have_account_button.html' %}
+    {% endif %}
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

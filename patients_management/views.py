@@ -8,8 +8,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
-from .forms import PatientForm, DoctorForm, CustomAuthenticationForm, ModifyPatientForm
-from .models import UserAccount, Patient, Doctor
+from .forms import PatientForm, DoctorForm, CustomAuthenticationForm, ModifyPatientForm, ConsultationForm
+from .models import UserAccount, Patient, Doctor, Consultation
 
 
 def unauthenticated_user(view_func):
@@ -59,10 +59,15 @@ def patient_consultations(request):
 @login_required(login_url='/login/')
 def doctor_consultations(request):
     current_view = resolve(request.path_info).url_name
+    consultation = Consultation.objects.filter(doctor=request.user).order_by('-date')
+    paginator = Paginator(consultation, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(
         request,
         'patients_management/pages/doctor/doctor_consultations.html',
-        {'current_view': current_view}
+        {'page_obj': page_obj, 'current_view': current_view}
     )
 
 
@@ -112,8 +117,8 @@ def register_doctor(request):
     )
 
 
-@unauthenticated_user
 def register_patient(request):
+    is_doctor = request.user.is_authenticated and request.user.role == UserAccount.Role.DOCTOR
     if request.method == 'POST':
         form = PatientForm(request.POST)
         if form.is_valid():
@@ -127,14 +132,20 @@ def register_patient(request):
                 last_name=form.cleaned_data['last_name'],
                 email=form.cleaned_data.get('email', None),
             )
-            login(request, user)
-            return redirect('index')
+            if is_doctor:
+                return redirect('doctor_list_patients')
+            else:
+                login(request, user)
+                return redirect('index')
     else:
         form = PatientForm()
     return render(
         request,
         'patients_management/pages/register/register_patient.html',
-        {'form': form}
+        {
+            'form': form,
+            'from_doctor': is_doctor
+        }
     )
 
 
@@ -176,3 +187,34 @@ def delete_patient(request, patient_id):
     if request.method == 'POST':
         patient.delete()
     return redirect('doctor_list_patients')
+
+
+@login_required(login_url='/login/')
+def create_consultation(request):
+    if request.method == 'POST':
+        form = ConsultationForm(request.POST)
+        if form.is_valid():
+            patient = form.cleaned_data['patient']
+            Consultation.objects.create(
+                name=patient.__str__(),
+                description=form.cleaned_data['description'],
+                date=form.cleaned_data['date'],
+                patient=patient,
+                consultation_type=form.cleaned_data['consultation_type'],
+                doctor=request.user
+            )
+            return redirect('doctor_consultations')
+    else:
+        form = ConsultationForm()
+    return render(
+        request,
+        'patients_management/pages/doctor/create_consultation.html',
+        {'form': form}
+    )
+
+
+def delete_consultation(request, consultation_id):
+    consultation = get_object_or_404(Consultation, pk=consultation_id)
+    if request.method == 'POST':
+        consultation.delete()
+    return redirect('doctor_consultations')
