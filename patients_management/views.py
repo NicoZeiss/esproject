@@ -1,7 +1,7 @@
 import requests
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
-
+from django.db.models import Q
 from django.http import JsonResponse
 from django.urls import resolve
 from django.shortcuts import render, redirect, get_object_or_404
@@ -51,8 +51,6 @@ def patient_consultations(request):
     current_view = resolve(request.path_info).url_name
     consultations = Consultation.objects.filter(patient=request.user).order_by('-date')
     paginator = Paginator(consultations, 10)
-    print(request.user.id)
-    print(consultations)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -81,7 +79,17 @@ def doctor_consultations(request):
 @login_required(login_url='/login/')
 def doctor_list_patients(request):
     current_view = resolve(request.path_info).url_name
-    patients = Patient.objects.all().order_by('last_name')
+
+    search_query = request.GET.get('search', '')
+    if search_query:
+        patients = Patient.objects.filter(
+            Q(last_name__icontains=search_query) |
+            Q(first_name__icontains=search_query)
+        )
+    else:
+        patients = Patient.objects.all()
+
+    patients = patients.order_by('last_name')
     paginator = Paginator(patients, 20)
 
     page_number = request.GET.get('page')

@@ -3,6 +3,12 @@
 
 {% block page_title %}
     <h1 class="text-center text-3xl py-4">Mes patients</h1>
+    <form method="get" action="{% url 'doctor_list_patients' %}" class="flex flex-nowrap items-center shadow-md">
+        <input class="h-10 min-w-60 px-2 rounded-l-md backdrop-blur-2xl bg-white/80 border border-white/30"
+               type="text" name="search" placeholder="Rechercher un patient" value="{{ request.GET.search }}">
+        <button class="h-full px-2 rounded-r-md text-white bg-cyan-500"
+                type="submit">{% heroicon_outline "magnifying-glass" %}</button>
+    </form>
 {% endblock %}
 
 {% block content %}
