@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 
 from django.http import JsonResponse
 from django.urls import resolve
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
@@ -154,3 +154,10 @@ def address_autocomplete(request):
     else:
         results = []
     return JsonResponse({'results': results})
+
+
+def delete_patient(request, patient_id):
+    patient = get_object_or_404(Patient, pk=patient_id)
+    if request.method == 'POST':
+        patient.delete()
+    return redirect('doctor_list_patients')

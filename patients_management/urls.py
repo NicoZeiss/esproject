@@ -2,7 +2,8 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 
 from patients_management.views import register, register_patient, register_doctor, address_autocomplete, index, \
-    patient_details, patient_consultations, doctor_list_patients, doctor_consultations, CustomLoginView
+    patient_details, patient_consultations, doctor_list_patients, doctor_consultations, CustomLoginView, \
+    delete_patient
 
 
 urlpatterns = [
@@ -20,4 +21,6 @@ urlpatterns = [
 
     path('doctor/patients/', doctor_list_patients, name='doctor_list_patients'),
     path('doctor/consultations/', doctor_consultations, name='doctor_consultations'),
+
+    path('delete-patient/<int:patient_id>/', delete_patient, name='delete_patient'),
 ]

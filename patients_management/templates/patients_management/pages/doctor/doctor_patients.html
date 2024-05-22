@@ -9,7 +9,7 @@
     <ul class="py-4 flex flex-col gap-1 items-center">
         {% for patient in page_obj %}
             <li class="w-3/4 max-w-4xl px-4 py-2 flex flex-nowrap justify-between items-center shadow-md rounded-sm
-            backdrop-blur-2xl bg-white/70">
+                backdrop-blur-2xl bg-white/70">
                 <div>
                     <h3 class="text-cyan-500 font-medium">{{ patient.first_name | capfirst }} {{ patient.last_name | upper }}</h3>
                     {% with item_style='flex flex-nowrap items-center gap-2 text-zinc-500' %}
@@ -26,12 +26,41 @@
                     <button type="button" class="text-zinc-500 hover:text-cyan-400 duration-300">
                         {% heroicon_outline "pencil" size=18 %}
                     </button>
-                    <button type="button"
-                            class="delete-btn text-zinc-600 hover:text-red-600 duration-300">
-                        {% heroicon_outline "trash" size=18 %}
-                    </button>
+                    <form id="deleteForm-{{ patient.id }}" method="POST" action="{% url 'delete_patient' patient.id %}">
+                        {% csrf_token %}
+                        <button type="button" id="deleteButton-{{ patient.id }}"
+                                data-modal-target="deleteModal-{{ patient.id }}"
+                                data-modal-toggle="deleteModal-{{ patient.id }}"
+                                class="delete-btn text-zinc-600 hover:text-red-600 duration-300">
+                            {% heroicon_outline "trash" size=18 %}
+                        </button>
+                    </form>
+
                 </div>
             </li>
+
+            <div id="deleteModal-{{ patient.id }}"
+                 class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 bottom-0 z-50 flex
+                 justify-center items-center bg-zinc-700/40">
+                <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+                    <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                        <div class="text-zinc-500 mb-3.5 w-full flex justify-center">{% heroicon_solid "trash" size=40 %}</div>
+                        <p class="mb-4 text-gray-500">Êtes-vous sûr de vouloir supprimer ce patient ?</p>
+                        <div class="flex justify-center items-center space-x-4">
+                            <button data-modal-close="deleteModal-{{ patient.id }}" type="button"
+                                    class="py-2 px-3 text-sm font-medium text-zinc-600 bg-zinc-200 rounded border border-zinc-200
+                                hover:bg-zinc-100">
+                                Annuler
+                            </button>
+                            <button id="confirmButton-{{ patient.id }}"
+                                    class="py-2 px-3 text-sm font-medium text-center text-white bg-cyan-500 rounded
+                                    hover:bg-cyan-600">
+                                Oui, supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
     </ul>
     <div class="w-full flex justify-center">
@@ -45,8 +74,8 @@
             {% endif %}
 
             <span class="px-2">
-                    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
-                  </span>
+                        {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                      </span>
 
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}">{% heroicon_outline "chevron-right" size=18 %}</a>
@@ -58,7 +87,31 @@
         </div>
     </div>
     <button class="fixed bottom-10 right-10 bg-cyan-500 rounded-full border-2 border-cyan-500 p-3.5 text-white
-         shadow-xl hover:bg-transparent hover:text-cyan-500 active:bg-cyan-500 active:text-white duration-300">
+             shadow-xl hover:bg-transparent hover:text-cyan-500 active:bg-cyan-500 active:text-white duration-300">
         {% heroicon_outline "plus" %}
     </button>
+
+
+    <script>
+        document.querySelectorAll('[id^="deleteButton-"]').forEach(button => {
+            button.addEventListener('click', function () {
+                const modalId = this.getAttribute('data-modal-target');
+                document.getElementById(modalId).classList.remove('hidden');
+            });
+        });
+
+        document.querySelectorAll('[data-modal-close]').forEach(button => {
+            button.addEventListener('click', function () {
+                const modalId = this.getAttribute('data-modal-close');
+                document.getElementById(modalId).classList.add('hidden');
+            });
+        });
+
+        document.querySelectorAll('[id^="confirmButton-"]').forEach(button => {
+            button.addEventListener('click', function () {
+                const patientId = this.id.split('-')[1];
+                document.getElementById(`deleteForm-${patientId}`).submit();
+            });
+        });
+    </script>
 {% endblock %}
