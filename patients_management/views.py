@@ -49,18 +49,25 @@ def patient_details(request):
 @login_required(login_url='/login/')
 def patient_consultations(request):
     current_view = resolve(request.path_info).url_name
+    consultations = Consultation.objects.filter(patient=request.user).order_by('-date')
+    paginator = Paginator(consultations, 10)
+    print(request.user.id)
+    print(consultations)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(
         request,
         'patients_management/pages/patient/patient_consultations.html',
-        {'current_view': current_view}
+        {'page_obj': page_obj, 'current_view': current_view}
     )
 
 
 @login_required(login_url='/login/')
 def doctor_consultations(request):
     current_view = resolve(request.path_info).url_name
-    consultation = Consultation.objects.filter(doctor=request.user).order_by('-date')
-    paginator = Paginator(consultation, 10)
+    consultations = Consultation.objects.filter(doctor=request.user).order_by('-date')
+    paginator = Paginator(consultations, 10)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

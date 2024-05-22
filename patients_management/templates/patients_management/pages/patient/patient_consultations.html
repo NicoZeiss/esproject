@@ -1,9 +1,43 @@
 {% extends 'patients_management/layouts/main_layout.html' %}
+{% load heroicons %}
 
 {% block page_title %}
-    <h1>Mes consultations</h1>
+    <h1 class="text-center text-3xl py-4">Mes consultations</h1>
 {% endblock %}
 
 {% block content %}
+    <ul class="grow self-stretch py-12 flex flex-col gap-1 items-center">
+        {% for consultation in page_obj %}
+            <li class="w-3/4 max-w-4xl px-4 py-2 flex flex-nowrap justify-between items-center shadow-md rounded-sm
+                backdrop-blur-2xl bg-white/70 border border-white/20">
+                <div>
+                    <h3 class="text-cyan-500 font-medium">
+                        Dr. {{ consultation.doctor.full_name }}
+                        <span></span>
+                    </h3>
+                    {% include 'patients_management/components/datetime_item.html' with is_outdated=consultation.is_outdated date=consultation.date %}
+                    {% if consultation.consultation_type == consultation.ConsultationType.VISIT %}
+                        {% include 'patients_management/components/chip.html' with label=consultation.verbose_type color='cyan' %}
+                    {% elif consultation.consultation_type == consultation.ConsultationType.AFTERCARE %}
+                        {% include 'patients_management/components/chip.html' with label=consultation.verbose_type color='teal' %}
+                    {% else %}
+                        {% include 'patients_management/components/chip.html' with label=consultation.verbose_type color='rose' %}
+                    {% endif %}
+                </div>
 
+                <div class="styled-sb h-24 grow mx-2 px-2 py-1 text-xs border-r border-l border-cyan-500/30 text-justify
+                 overflow-x-hidden overflow-y-auto">
+                    {{ consultation.description }}
+                </div>
+            </li>
+        {% empty %}
+            <li class="w-3/4 max-w-4xl px-4 py-8 flex flex-nowrap justify-center items-center shadow-md rounded-sm
+                backdrop-blur-2xl bg-white/70 border border-white/20 text-lg">
+                Aucune consultation à afficher
+            </li>
+        {% endfor %}
+        {% if page_obj %}
+            {% include 'patients_management/components/paginator.html' with page_obj=page_obj %}
+        {% endif %}
+    </ul>
 {% endblock %}

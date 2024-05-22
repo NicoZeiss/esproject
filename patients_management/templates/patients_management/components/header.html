@@ -8,22 +8,20 @@ flex justify-center items-center overflow-hidden z-50">
     {% if user.is_authenticated %}
         <div class="flex flex-col items-center gap-1">
             <h2 class="text-center text-xl">
-                {% if user.first_name and user.last_name %}
-                    Bienvenue {{ user.first_name | capfirst }} {{ user.last_name | capfirst }}
-                {% else %}
-                    Bienvenue {{ user.username | capfirst }}
-                {% endif %}
+                Bienvenue {{ user.full_name }}
             </h2>
             <div class="flex gap-2">
                 {% with button_style='text-sm px-1 py-1 border-b-2 hover:border-cyan-400 duration-300' not_selected='border-zinc-300' selected='border-cyan-500' %}
                     {% if user.role == user.Role.DOCTOR %}
                         <a href="{% url 'doctor_consultations' %}"
                            class="{{ button_style }}
+
                                    {% if current_view == 'doctor_consultations' %}{{ selected }}{% else %}{{ not_selected }}{% endif %}">
                             Consultations
                         </a>
                         <a href="{% url 'doctor_list_patients' %}"
                            class="{{ button_style }}
+
                                    {% if current_view == 'doctor_list_patients' %}{{ selected }}{% else %}{{ not_selected }}{% endif %}">
                             Patients
                         </a>
@@ -31,11 +29,13 @@ flex justify-center items-center overflow-hidden z-50">
                     {% if user.role == user.Role.PATIENT %}
                         <a href="{% url 'patient_consultations' %}"
                            class="{{ button_style }}
+
                                    {% if current_view == 'patient_consultations' %}{{ selected }}{% else %}{{ not_selected }}{% endif %}">
                             Consultations
                         </a>
                         <a href="{% url 'patient_details' %}"
                            class="{{ button_style }}
+
                                    {% if current_view == 'patient_details' %}{{ selected }}{% else %}{{ not_selected }}{% endif %}">
                             Coordonnées
                         </a>

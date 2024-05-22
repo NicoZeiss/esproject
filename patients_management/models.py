@@ -18,6 +18,15 @@ class UserAccount(AbstractUser):
     zip_code = models.CharField(max_length=10, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
 
+    def __str__(self):
+        if self.last_name and self.first_name:
+            return f"{self.last_name.upper()} {self.first_name.capitalize()}"
+        return self.username.capitalize()
+
+    @property
+    def full_name(self):
+        return self.__str__()
+
     def save(self, *args, **kwargs):
         self.role = self.base_role
         return super().save(*args, **kwargs)
@@ -47,11 +56,6 @@ class Patient(UserAccount):
         self.is_superuser = False
         self.is_staff = False
         return super().save(*args, **kwargs)
-
-    def __str__(self):
-        if self.last_name and self.first_name:
-            return f"{self.last_name.upper()} {self.first_name.capitalize()}"
-        return self.username.capitalize()
 
 
 class DoctorManager(UserManager):
