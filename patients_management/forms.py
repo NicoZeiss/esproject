@@ -21,6 +21,22 @@ class PatientForm(forms.ModelForm):
         }
 
 
+class ModifyPatientForm(forms.ModelForm):
+    class Meta:
+        input_classes = 'w-full py-2 px-4'
+        model = Patient
+        fields = ['username', 'first_name', 'last_name', 'email', 'street', 'zip_code', 'city']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': input_classes, 'placeholder': 'Nom d\'utilisateur'}),
+            'first_name': forms.TextInput(attrs={'class': input_classes, 'placeholder': 'Prénom'}),
+            'last_name': forms.TextInput(attrs={'class': input_classes, 'placeholder': 'Nom'}),
+            'email': forms.TextInput(attrs={'class': input_classes, 'placeholder': 'Email'}),
+            'street': forms.HiddenInput(),
+            'zip_code': forms.HiddenInput(),
+            'city': forms.HiddenInput(),
+        }
+
+
 class DoctorForm(forms.ModelForm):
     class Meta:
         input_classes = 'w-full py-2 px-4'

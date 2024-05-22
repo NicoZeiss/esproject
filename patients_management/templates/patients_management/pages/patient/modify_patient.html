@@ -1,0 +1,63 @@
+{% extends 'patients_management/layouts/glassmorphic_card.html' %}
+
+{% block card_title %}
+    <h2 class="text-xl text-teal-500 text-center font-medium pb-3 border-b-2 uppercase">
+        Modification du client
+    </h2>
+{% endblock %}
+
+{% block card_content %}
+    <form method="POST" class="w-full flex flex-col items-stretch gap-4">
+        {% csrf_token %}
+        {{ form.username }}
+        {{ form.password }}
+        {{ form.first_name }}
+        {{ form.last_name }}
+        {{ form.email }}
+        {{ form.street }}
+        {{ form.zip_code }}
+        {{ form.city }}
+        <select name="address-autocomplete" id="address-autocomplete" class="w-full"></select>
+        <button type="submit" class="text-center bg-teal-500 py-2 uppercase text-white font-medium
+            rounded-md hover:bg-teal-400 active:bg-teal-500 duration-200">
+            Modifier
+        </button>
+        <a class="text-center bg-zinc-300 py-2 uppercase text-zinc-600 font-medium
+            rounded-md hover:bg-zinc-200 active:bg-zinc-300 duration-200"
+           href="{% url 'doctor_list_patients' %}">Annuler</a>
+    </form>
+{#    {% include 'patients_management/components/have_account_button.html' %}#}
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#address-autocomplete').select2({
+                placeholder: 'Votre adresse...',
+                ajax: {
+                    url: '{% url "address_autocomplete" %}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term // search term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.results
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $('#address-autocomplete').on('select2:select', function (e) {
+                var data = e.params.data;
+                $('#id_street').val(data['street']);
+                $('#id_zip_code').val(data['zip_code']);
+                $('#id_city').val(data['city']);
+            });
+        });
+    </script>
+{% endblock %}

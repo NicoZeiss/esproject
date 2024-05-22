@@ -10,6 +10,8 @@ class UserAccount(AbstractUser):
 
     base_role = Role.ADMIN
 
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
     role = models.CharField(max_length=10, choices=Role.choices)
     street = models.CharField(max_length=200, null=True, blank=True)
     zip_code = models.CharField(max_length=10, null=True, blank=True)

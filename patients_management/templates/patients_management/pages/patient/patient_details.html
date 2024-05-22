@@ -9,15 +9,9 @@
 
 {% block card_content %}
     {% with item_style='flex items-center gap-4' %}
-    {% if user.last_name and user.first_name %}
-        <p class="{{ item_style }}">
-            {% heroicon_outline "user" size=18 %}<span>{{ user.first_name | capfirst }} {{ user.last_name | upper }}</span>
-        </p>
-        {% else %}
-        <p class="{{ item_style }}">
-            {% heroicon_outline "user" size=18 %}<span>Non renseigné</span>
-        </p>
-    {% endif %}
+    <p class="{{ item_style }}">
+        {% heroicon_outline "user" size=18 %}<span>{{ user.first_name | capfirst }} {{ user.last_name | upper }}</span>
+    </p>
     <p class="{{ item_style }}">
         {% heroicon_outline "tag" size=18 %}<span>{{ user.username }}</span>
     </p>

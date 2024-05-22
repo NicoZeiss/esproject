@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
-from .forms import PatientForm, DoctorForm, CustomAuthenticationForm
+from .forms import PatientForm, DoctorForm, CustomAuthenticationForm, ModifyPatientForm
 from .models import UserAccount, Patient, Doctor
 
 
@@ -69,7 +69,7 @@ def doctor_consultations(request):
 @login_required(login_url='/login/')
 def doctor_list_patients(request):
     current_view = resolve(request.path_info).url_name
-    patients = Patient.objects.all().order_by('username')
+    patients = Patient.objects.all().order_by('last_name')
     paginator = Paginator(patients, 20)
 
     page_number = request.GET.get('page')
@@ -117,7 +117,6 @@ def register_patient(request):
     if request.method == 'POST':
         form = PatientForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
             user = Patient.objects.create_user(
                 username=form.cleaned_data['username'],
                 password=form.cleaned_data['password'],
@@ -154,6 +153,22 @@ def address_autocomplete(request):
     else:
         results = []
     return JsonResponse({'results': results})
+
+
+def modify_patient(request, patient_id):
+    patient = get_object_or_404(Patient, pk=patient_id)
+    if request.method == 'POST':
+        form = ModifyPatientForm(request.POST, instance=patient)
+        if form.is_valid():
+            form.save()
+            return redirect('doctor_list_patients')
+    else:
+        form = ModifyPatientForm(instance=patient)
+    return render(
+        request,
+        'patients_management/pages/patient/modify_patient.html',
+        {'form': form, 'patient': patient}
+    )
 
 
 def delete_patient(request, patient_id):
