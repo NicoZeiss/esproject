@@ -1,0 +1,36 @@
+{% extends 'patients_management/layouts/glassmorphic_card.html' %}
+
+{% block card_title %}
+    <h2 class="text-xl text-teal-500 text-center font-medium pb-3 border-b-2 uppercase">
+        Modification de la consultation
+    </h2>
+{% endblock %}
+
+{% block card_content %}
+    <form method="POST" class="w-full flex flex-col items-stretch gap-4">
+        {% csrf_token %}
+        {{ form.patient }}
+        {{ form.description }}
+        {{ form.date }}
+        {{ form.consultation_type }}
+        <button type="submit" class="text-center bg-teal-500 py-2 uppercase text-white font-medium
+            rounded-md hover:bg-teal-400 active:bg-teal-500 duration-200">
+            Modifier
+        </button>
+        {% include 'patients_management/components/return_button.html' with return_url='/doctor/consultations/' %}
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#id_patient').select2({
+                placeholder: 'Sélectionnez un patient',
+            });
+        });
+
+        $('#id_consultation_type').select2({
+                placeholder: 'Type de consultation',
+            });
+    </script>
+{% endblock %}

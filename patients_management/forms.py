@@ -75,7 +75,10 @@ class ConsultationForm(forms.ModelForm):
         model = Consultation
         fields = ['patient', 'description', 'date', 'consultation_type']
         widgets = {
-            'date': forms.DateTimeInput(attrs={'class': input_classes, 'type': 'datetime-local'}),
+            'date': forms.DateTimeInput(
+                attrs={'class': input_classes, 'type': 'datetime-local'},
+                format='%Y-%m-%dT%H:%M'
+            ),
             'description': forms.Textarea(attrs={'class': input_classes, 'placeholder': 'Description'}),
             'consultation_type': forms.Select(attrs={'class': input_classes, 'placeholder': 'Type'}),
         }
@@ -83,3 +86,4 @@ class ConsultationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['patient'].queryset = Patient.objects.order_by('last_name', 'first_name')
+        self.fields['date'].input_formats = ['%Y-%m-%dT%H:%M']

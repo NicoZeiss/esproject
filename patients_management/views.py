@@ -166,6 +166,7 @@ def address_autocomplete(request):
     return JsonResponse({'results': results})
 
 
+@login_required(login_url='/login/')
 def modify_patient(request, patient_id):
     patient = get_object_or_404(Patient, pk=patient_id)
     if request.method == 'POST':
@@ -182,6 +183,7 @@ def modify_patient(request, patient_id):
     )
 
 
+@login_required(login_url='/login/')
 def delete_patient(request, patient_id):
     patient = get_object_or_404(Patient, pk=patient_id)
     if request.method == 'POST':
@@ -213,6 +215,30 @@ def create_consultation(request):
     )
 
 
+@login_required(login_url='/login/')
+def modify_consultation(request, consultation_id):
+    consultation = get_object_or_404(Consultation, pk=consultation_id)
+    if request.method == 'POST':
+        form = ConsultationForm(request.POST, instance=consultation)
+        if form.is_valid():
+            patient = form.cleaned_data['patient']
+            consultation.name = patient.__str__()
+            consultation.description = form.cleaned_data['description']
+            consultation.date = form.cleaned_data['date']
+            consultation.patient = patient
+            consultation.consultation_type = form.cleaned_data['consultation_type']
+            consultation.save()
+            return redirect('doctor_consultations')
+    else:
+        form = ConsultationForm(instance=consultation)
+    return render(
+        request,
+        'patients_management/pages/doctor/modify_consultation.html',
+        {'form': form, 'consultation': consultation}
+    )
+
+
+@login_required(login_url='/login/')
 def delete_consultation(request, consultation_id):
     consultation = get_object_or_404(Consultation, pk=consultation_id)
     if request.method == 'POST':

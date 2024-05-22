@@ -22,11 +22,8 @@
             rounded-md hover:bg-teal-400 active:bg-teal-500 duration-200">
             Modifier
         </button>
-        <a class="text-center bg-zinc-300 py-2 uppercase text-zinc-600 font-medium
-            rounded-md hover:bg-zinc-200 active:bg-zinc-300 duration-200"
-           href="{% url 'doctor_list_patients' %}">Annuler</a>
+        {% include 'patients_management/components/return_button.html' with return_url='/doctor/patients/' %}
     </form>
-{#    {% include 'patients_management/components/have_account_button.html' %}#}
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
