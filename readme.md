@@ -25,14 +25,6 @@ POSTGRES_HOST=db
 DJANGO_SECRET_KEY=[SECRET_KEY_DE_DJANGO]
 # La clé secrête de Django n'a pas besoin d'être sécurisée 
 # pour un lancement de serveur en local
-
-# Il est également possible de créer un optional.env pour stocker
-# des variables optionelles (qui ont des valeurs par défaut)
-touch environments/optional.env
-
-# On peut par exemple activer le DEBUG de Django en ajoutant la 
-# var env suivante :
-DEBUG=True
 ```
 
 ## Initialisation du projet
