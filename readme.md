@@ -1,6 +1,39 @@
 # Bienvenue sur le guide d'installation de l'app DoctoBill !
 
+## Prérequis
+Sur Windows, avoir téléchargé et activé le WSL2.
+Avoir installé Git.
+Avoir installé Docker, Docker Compose et Docker Desktop.
+[Aide à l'installation](https://docs.docker.com/compose/install/)
 
+## Récupération du projet
+[Repository du projet](https://github.com/NicoZeiss/esproject)
+```bash
+# Cloner le projet
+git clone https://github.com/NicoZeiss/esproject.git
+
+# Créer un fhichier environments/required.env à la racine du projet
+mkdir environments
+touch environments/required.env
+
+# Ajouter les variables d'environnements dans required.env
+POSTGRES_DB=[NOM_DE_LA_DATABASE_POSTGRESQL] 
+POSTGRES_USER=[NOM_DU_USER_POSTGRESQL]
+POSTGRES_PASSWORD=[PASSWORD_DU_USER_POSTGRESQL]
+POSTGRES_HOST=db 
+  
+DJANGO_SECRET_KEY=[SECRET_KEY_DE_DJANGO]
+# La clé secrête de Django n'a pas besoin d'être sécurisée 
+# pour un lancement de serveur en local
+
+# Il est également possible de créer un optional.env pour stocker
+# des variables optionelles (qui ont des valeurs par défaut)
+touch environments/optional.env
+
+# On peut par exemple activer le DEBUG de Django en ajoutant la 
+# var env suivante :
+DEBUG=True
+```
 
 ## Initialisation du projet
 ```bash
@@ -15,10 +48,9 @@ docker-compose exec web python manage.py migrate
 
 # Création de 5000 patients en BDD
 docker-compose exec web python manage.py create_patients
-
-# Se rendre sur l'adresse locale
-http://localhost:8000/
 ```
+**Se rendre sur l'adresse locale pour vérifier que tout fonctionne :**
+<http://localhost:8000/>
 ## Créer un médecin
 1. Cliquer sur *"Pas encore de compte ?"*
 2. Cliquer sur *"Un médecin"*
